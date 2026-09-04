@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Trace — Social Media Safety &amp; Digital Footprint Awareness</title>
+<meta name="description" content="A field research project on social media safety and digital footprint awareness — survey findings, safety guidance, and full methodology from a B.Sc. IT Community Engagement Project.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ===================== Design tokens ===================== */
+  :root{
+    --ink:        #12201B;
+    --ink-soft:   #435049;
+    --paper:      #F1F3EC;
+    --paper-dim:  #E7EAE0;
+    --paper-deep: #DDE1D3;
+    --teal:       #1D6B57;
+    --teal-deep:  #0F3F33;
+    --teal-tint:  #DCEAE4;
+    --teal-line:  #BFD6CC;
+    --gold:       #BD7F2C;
+    --gold-tint:  #F3E6D1;
+    --brick:      #9E3B32;
+    --brick-tint: #F1DAD6;
+    --line:       #CBCFC0;
+    --line-soft:  #DFE2D8;
+
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+    --container: 1160px;
+    --measure: 700px;
+    --nav-h: 64px;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; scroll-padding-top:calc(var(--nav-h) + 14px); }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *,*::before,*::after{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  }
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; }
+  ul,ol{ padding:0; margin:0; list-style:none; }
+  p{ margin:0 0 1em; }
+  p:last-child{ margin-bottom:0; }
+
+  h1,h2,h3,h4{
+    font-family:var(--font-display);
+    font-weight:600;
+    line-height:1.12;
+    letter-spacing:-0.01em;
+    margin:0;
+    color:var(--ink);
+  }
+
+  ::selection{ background:var(--teal); color:var(--paper); }
+
+  :focus-visible{ outline:2.5px solid var(--gold); outline-offset:3px; }
+
+  /* ===================== Layout helpers ===================== */
+  .wrap{ max-width:var(--container); margin-inline:auto; padding-inline:24px; }
+  .prose{ max-width:var(--measure); }
+
+  .section{ padding-block:64px; scroll-margin-top:var(--nav-h); }
+  .section--tight{ padding-block:44px; }
+  .section--alt{ background:var(--paper-dim); }
+  .section--ink{ background:var(--teal-deep); color:var(--paper); }
+  .section--ink h1, .section--ink h2, .section--ink h3{ color:var(--paper); }
+
+  .divider{ border:none; border-top:1px solid var(--line); margin:0; }
+
+  .kicker{
+    display:flex; align-items:baseline; gap:10px;
+    font-family:var(--font-body); font-weight:600; font-size:14px;
+    color:var(--teal); margin-bottom:14px;
+  }
+  .section--ink .kicker{ color:var(--teal-line); }
+  .kicker .num{ font-family:var(--font-mono); color:var(--ink-soft); font-weight:500; }
+  .section--ink .kicker .num{ color:#9FC4B8; }
+
+  h2.h-section{ font-size:clamp(28px,4.4vw,40px); margin-bottom:14px; }
+  .lede{ font-size:19px; color:var(--ink-soft); max-width:var(--measure); }
+  .section--ink .lede{ color:#D3E4DC; }
+
+  .section-head{ margin-bottom:40px; }
+
+  /* ===================== Buttons ===================== */
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--font-body); font-weight:600; font-size:15.5px;
+    padding:13px 24px; border-radius:3px; border:1.5px solid transparent;
+    cursor:pointer; text-decoration:none; transition:transform .15s ease, background-color .15s ease, border-color .15s ease, color .15s ease;
+    line-height:1.2;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn-gold{ background:var(--gold); color:var(--teal-deep); }
+  .btn-gold:hover{ background:#CE8E38; }
+  .btn-teal{ background:var(--teal); color:var(--paper); }
+  .btn-teal:hover{ background:var(--teal-deep); }
+  .btn-ghost{ background:transparent; border-color:var(--ink); color:var(--ink); }
+  .btn-ghost:hover{ background:var(--ink); color:var(--paper); }
+  .btn-ghost-light{ background:transparent; border-color:#8FB6A9; color:var(--paper); }
+  .btn-ghost-light:hover{ background:rgba(241,243,236,0.12); border-color:var(--paper); }
+
+  /* ===================== Nav ===================== */
+  .nav{
+    position:sticky; top:0; z-index:100;
+    background:rgba(241,243,236,0.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    height:var(--nav-h);
+  }
+  .nav-inner{
+    max-width:var(--container); margin-inline:auto; padding-inline:24px;
+    height:100%; display:flex; align-items:center; justify-content:space-between; gap:20px;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink); flex-shrink:0; }
+  .brand-mark{ width:26px; height:26px; flex-shrink:0; }
+  .brand-text{ font-family:var(--font-display); font-weight:600; font-size:19px; letter-spacing:-0.01em; }
+
+  .nav-list{ display:flex; align-items:center; gap:2px; }
+  .nav-list a{
+    display:block; padding:9px 13px; font-size:14.5px; font-weight:500;
+    text-decoration:none; color:var(--ink-soft); border-radius:3px;
+    transition:color .15s ease, background-color .15s ease;
+    white-space:nowrap;
+  }
+  .nav-list a:hover{ color:var(--ink); background:var(--paper-dim); }
+  .nav-list a.is-active{ color:var(--teal); font-weight:600; }
+
+  .nav-toggle{
+    display:none; background:none; border:1.5px solid var(--ink); border-radius:3px;
+    width:40px; height:36px; cursor:pointer; padding:0; flex-shrink:0;
+    align-items:center; justify-content:center;
+  }
+  .nav-toggle svg{ width:18px; height:18px; }
+
+  @media (max-width:980px){
+    .nav-list{
+      position:fixed; inset:var(--nav-h) 0 0 0; height:calc(100dvh - var(--nav-h));
+      background:var(--paper); flex-direction:column; align-items:stretch; gap:0;
+      padding:10px 18px 30px; overflow-y:auto;
+      transform:translateX(100%); transition:transform .25s ease;
+      border-top:1px solid var(--line);
+    }
+    .nav-list.is-open{ transform:translateX(0); }
+    .nav-list a{ padding:15px 6px; font-size:17px; border-bottom:1px solid var(--line-soft); border-radius:0; }
+    .nav-toggle{ display:inline-flex; }
+  }
+
+  /* ===================== Hero ===================== */
+  .hero{
+    position:relative; overflow:hidden;
+    background:var(--teal-deep); color:var(--paper);
+    padding-block:76px 64px;
+  }
+  .hero-trace{ position:absolute; inset:0; opacity:0.55; pointer-events:none; }
+  .hero-trace path{
+    fill:none; stroke:#3E8A73; stroke-width:1.4; stroke-linecap:round;
+    stroke-dasharray:6 7;
+  }
+  .hero-trace circle{ fill:#5FA491; }
+  .hero-inner{ position:relative; max-width:var(--container); margin-inline:auto; padding-inline:24px; }
+  .hero-eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:13.5px; font-weight:600; letter-spacing:0.02em;
+    color:#B9DBCC; margin-bottom:22px;
+  }
+  .hero-eyebrow .dot{ width:7px; height:7px; border-radius:50%; background:var(--gold); }
+  .hero h1{
+    font-size:clamp(34px,6vw,60px); max-width:16ch; color:var(--paper); margin-bottom:22px;
+  }
+  .hero-lede{ font-size:19px; max-width:52ch; color:#D3E4DC; margin-bottom:8px; }
+  .hero-meta{
+    display:flex; flex-wrap:wrap; gap:6px 22px; margin:26px 0 32px;
+    font-family:var(--font-mono); font-size:13.5px; color:#9FC4B8;
+  }
+  .hero-actions{ display:flex; flex-wrap:wrap; gap:14px; }
+
+  /* ===================== Cards / topic grids ===================== */
+  .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); margin-top:8px; }
+  @media (max-width:700px){ .grid-2{ grid-template-columns:1fr; } }
+
+  .topic-card{ background:var(--paper); padding:30px 28px; }
+  .topic-card .icon{ width:34px; height:34px; color:var(--teal); margin-bottom:16px; }
+  .topic-card h3{ font-size:20px; margin-bottom:10px; }
+  .topic-card p{ color:var(--ink-soft); font-size:15.5px; }
+  .topic-card .stat-chip{
+    display:inline-flex; align-items:baseline; gap:6px; margin-top:14px;
+    font-family:var(--font-mono); font-size:13px; color:var(--teal);
+    background:var(--teal-tint); padding:5px 10px; border-radius:2px;
+  }
+  .topic-card .stat-chip.gold{ color:#8A5D1F; background:var(--gold-tint); }
+  .topic-card .stat-chip.brick{ color:var(--brick); background:var(--brick-tint); }
+
+  /* ===================== Stat strip ===================== */
+  .stat-row{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+    gap:0; margin-top:8px; border-top:1px solid var(--line); border-left:1px solid var(--line);
+  }
+  .stat{ padding:22px 20px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .stat-num{ font-family:var(--font-display); font-size:clamp(26px,3.4vw,36px); font-weight:600; color:var(--teal); line-height:1; }
+  .stat-label{ font-size:13.5px; color:var(--ink-soft); margin-top:8px; line-height:1.35; }
+
+  /* ===================== Big findings numerals ===================== */
+  .finding-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:8px; }
+  .finding{ background:var(--paper); padding:34px 28px; }
+  .finding-num{ font-family:var(--font-display); font-size:clamp(38px,5vw,54px); font-weight:600; color:var(--teal); line-height:1; }
+  .finding-num sup{ font-size:0.42em; top:-1.1em; }
+  .finding-label{ margin-top:12px; font-size:15px; color:var(--ink-soft); max-width:26ch; }
+
+  /* ===================== Chart components ===================== */
+  .chart-group{ margin-top:52px; }
+  .chart-group-title{ font-family:var(--font-mono); font-size:13px; font-weight:500; color:var(--teal); text-transform:none; letter-spacing:0.02em; margin-bottom:4px; }
+  .chart-group-desc{ color:var(--ink-soft); font-size:15px; margin-bottom:22px; max-width:var(--measure); }
+
+  .chart-block{ padding-block:26px; border-top:1px solid var(--line); }
+  .chart-block:first-of-type{ border-top:none; }
+  .chart-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:18px; }
+  .chart-q{ font-size:16.5px; font-weight:600; max-width:56ch; }
+  .chart-tag{ flex-shrink:0; font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft); border:1px solid var(--line); padding:3px 8px; border-radius:2px; white-space:nowrap; }
+
+  .bars{ display:flex; flex-direction:column; gap:10px; }
+  .bar-row{ display:grid; grid-template-columns:minmax(120px,220px) 1fr 64px; align-items:center; gap:12px; }
+  @media (max-width:640px){ .bar-row{ grid-template-columns:1fr; gap:4px; } .bar-row .bar-track{ order:2; } .bar-row .bar-value{ order:3; text-align:left; } .bar-row .bar-label{ order:1; } }
+  .bar-label{ font-size:14px; color:var(--ink-soft); }
+  .bar-track{ position:relative; height:22px; background:var(--paper-dim); border-radius:2px; overflow:hidden; cursor:default; }
+  .bar-fill{ position:absolute; inset:0 auto 0 0; width:0; background:var(--teal); border-radius:2px; transition:width 1s cubic-bezier(.16,.84,.44,1); }
+  .bar-fill.is-multi{ background:var(--gold); }
+  .bar-value{ font-family:var(--font-mono); font-size:13.5px; text-align:right; color:var(--ink); white-space:nowrap; }
+  .bar-track:hover .bar-fill, .bar-track:focus-visible .bar-fill{ filter:brightness(1.08); }
+
+  .donut-row{ display:flex; align-items:center; gap:28px; flex-wrap:wrap; }
+  .donut-svg{ width:150px; height:150px; flex-shrink:0; }
+  .donut-svg circle.bg{ fill:none; stroke:var(--paper-dim); stroke-width:16; }
+  .donut-svg circle.seg{ fill:none; stroke-width:16; stroke-dasharray:0 999; transition:stroke-dasharray 1s cubic-bezier(.16,.84,.44,1); }
+  .donut-center-num{ font-family:var(--font-display); font-size:22px; font-weight:600; fill:var(--ink); }
+  .donut-legend{ display:flex; flex-direction:column; gap:9px; flex:1; min-width:180px; }
+  .legend-row{ display:flex; align-items:center; gap:9px; font-size:14px; }
+  .legend-swatch{ width:11px; height:11px; border-radius:2px; flex-shrink:0; }
+  .legend-label{ color:var(--ink-soft); flex:1; }
+  .legend-value{ font-family:var(--font-mono); font-size:13px; color:var(--ink); }
+
+  .chart-note{ margin-top:16px; font-size:14px; color:var(--ink-soft); font-style:italic; }
+
+  .badge-note{
+    display:inline-flex; align-items:center; gap:8px; font-size:13.5px; color:#8A5D1F;
+    background:var(--gold-tint); border:1px solid #E3C68F; padding:8px 14px; border-radius:3px;
+  }
+
+  /* ===================== Data table ===================== */
+  .table-toolbar{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin:28px 0 16px; }
+  .search-box{
+    display:flex; align-items:center; gap:8px; border:1.5px solid var(--ink); border-radius:3px;
+    padding:9px 13px; background:var(--paper); flex:1; min-width:220px; max-width:340px;
+  }
+  .search-box svg{ width:15px; height:15px; color:var(--ink-soft); flex-shrink:0; }
+  .search-box input{ border:none; background:none; outline:none; font-family:var(--font-body); font-size:14.5px; width:100%; color:var(--ink); }
+  .table-count{ font-family:var(--font-mono); font-size:13px; color:var(--ink-soft); }
+
+  .table-scroll{ overflow-x:auto; border:1px solid var(--line); }
+  table.data-table{ border-collapse:collapse; width:100%; min-width:760px; font-size:13.5px; font-family:var(--font-mono); }
+  table.data-table th, table.data-table td{ padding:10px 14px; text-align:left; border-bottom:1px solid var(--line-soft); white-space:nowrap; }
+  table.data-table th{ background:var(--paper-dim); font-weight:500; color:var(--ink-soft); position:sticky; top:0; cursor:help; }
+  table.data-table tbody tr:hover{ background:var(--teal-tint); }
+  table.data-table td.expand-cell{ cursor:pointer; color:var(--teal); font-weight:500; }
+  .row-detail{ display:none; }
+  .row-detail.is-open{ display:table-row; }
+  .row-detail td{ white-space:normal; background:var(--paper-dim); font-family:var(--font-body); padding:18px 20px; }
+  .row-detail dl{ display:grid; grid-template-columns:minmax(160px,280px) 1fr; gap:8px 16px; margin:0; }
+  .row-detail dt{ color:var(--ink-soft); font-size:13px; }
+  .row-detail dd{ margin:0; font-size:14px; }
+
+  /* ===================== Guide grid ===================== */
+  .guide-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); margin-top:8px; }
+  @media (max-width:760px){ .guide-grid{ grid-template-columns:1fr; } }
+  .guide-card{ background:var(--paper); padding:30px 28px; }
+  .guide-card .guide-icon{ width:30px; height:30px; color:var(--brick); margin-bottom:14px; }
+  .guide-card.c-click .guide-icon{ color:var(--gold); }
+  .guide-card.c-post .guide-icon{ color:var(--teal); }
+  .guide-card.c-protect .guide-icon{ color:var(--teal-deep); }
+  .guide-card.c-wrong .guide-icon{ color:var(--brick); }
+  .guide-card h3{ font-size:19px; margin-bottom:14px; }
+  .guide-card ol{ display:flex; flex-direction:column; gap:11px; counter-reset:g; }
+  .guide-card ol li{ counter-increment:g; display:flex; gap:11px; font-size:14.5px; color:var(--ink-soft); }
+  .guide-card ol li::before{
+    content:counter(g); flex-shrink:0; width:20px; height:20px; border-radius:50%;
+    background:var(--paper-dim); color:var(--ink); font-family:var(--font-mono); font-size:11.5px;
+    display:flex; align-items:center; justify-content:center; margin-top:1px;
+  }
+
+  /* ===================== Methodology steps ===================== */
+  .step-list{ display:flex; flex-direction:column; margin-top:8px; }
+  .step{ display:grid; grid-template-columns:64px 1fr; gap:20px; padding-block:26px; border-top:1px solid var(--line); }
+  .step:first-child{ border-top:none; }
+  .step-num{ font-family:var(--font-display); font-size:26px; color:var(--line); font-weight:600; }
+  .step h3{ font-size:19px; margin-bottom:8px; }
+  .step p{ color:var(--ink-soft); font-size:15.5px; max-width:var(--measure); }
+  .step ul{ margin-top:10px; display:flex; flex-direction:column; gap:6px; }
+  .step ul li{ font-size:14.5px; color:var(--ink-soft); padding-left:16px; position:relative; }
+  .step ul li::before{ content:''; position:absolute; left:0; top:9px; width:6px; height:1.5px; background:var(--teal); }
+
+  /* ===================== Report / certificate cards ===================== */
+  .doc-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:8px; }
+  @media (max-width:760px){ .doc-grid{ grid-template-columns:1fr; } }
+  .doc-card{ border:1px solid var(--line); background:var(--paper); padding:26px 26px 24px; position:relative; }
+  .doc-card::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--teal); }
+  .doc-card h3{ font-family:var(--font-mono); font-size:13px; font-weight:500; letter-spacing:0.03em; color:var(--teal); margin-bottom:14px; }
+  .doc-card p{ font-size:14.5px; color:var(--ink-soft); margin-bottom:10px; }
+  .doc-card .blank{ display:inline-block; border-bottom:1px solid var(--ink-soft); min-width:150px; }
+  .doc-card .sig-row{ display:flex; justify-content:space-between; gap:10px; margin-top:18px; padding-top:14px; border-top:1px dashed var(--line); font-size:12.5px; color:var(--ink-soft); flex-wrap:wrap; }
+
+  .pdf-panel{ margin-top:44px; border:1px solid var(--line); background:var(--paper); }
+  .pdf-panel-head{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:14px; padding:20px 24px; border-bottom:1px solid var(--line); }
+  .pdf-panel-head h3{ font-size:19px; }
+  .pdf-panel-meta{ font-family:var(--font-mono); font-size:12.5px; color:var(--ink-soft); margin-top:4px; }
+  .pdf-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+  .pdf-frame-wrap{ background:var(--paper-dim); }
+  .pdf-frame-wrap iframe{ width:100%; height:640px; border:none; display:block; }
+  .pdf-fallback{ padding:60px 24px; text-align:center; color:var(--ink-soft); font-size:14.5px; }
+
+  /* ===================== About ===================== */
+  .about-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:44px; margin-top:8px; }
+  @media (max-width:840px){ .about-grid{ grid-template-columns:1fr; gap:36px; } }
+  .id-card{ border:1.5px solid var(--ink); padding:30px; }
+  .id-card .id-row{ padding-block:14px; border-top:1px solid var(--line-soft); }
+  .id-card .id-row:first-child{ border-top:none; padding-top:0; }
+  .id-label{ font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft); letter-spacing:0.03em; margin-bottom:5px; }
+  .id-value{ font-size:16.5px; font-weight:500; }
+  .id-value.placeholder{ color:var(--ink-soft); font-style:italic; font-weight:400; }
+  .obj-list{ display:flex; flex-direction:column; gap:12px; margin-top:6px; }
+  .obj-list li{ display:flex; gap:12px; font-size:15px; color:var(--ink-soft); }
+  .obj-list li .dot{ flex-shrink:0; width:7px; height:7px; border-radius:50%; background:var(--teal); margin-top:8px; }
+
+  /* ===================== Footer ===================== */
+  .site-footer{ background:var(--teal-deep); color:#B9DBCC; padding-block:44px; }
+  .footer-inner{ max-width:var(--container); margin-inline:auto; padding-inline:24px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:24px; align-items:center; }
+  .footer-inner .brand-text{ color:var(--paper); }
+  .footer-note{ font-size:13.5px; max-width:520px; }
+  .footer-links{ display:flex; gap:18px; flex-wrap:wrap; font-size:13.5px; }
+  .footer-links a{ text-decoration:none; color:#B9DBCC; }
+  .footer-links a:hover{ color:var(--paper); }
+
+  /* ===================== Reveal animation ===================== */
+  .reveal{ opacity:1; }
+
+  @keyframes nodeIn{ from{ opacity:0; transform:scale(0.3); } to{ opacity:1; transform:scale(1); } }
+  .hero-trace circle{ transform-origin:center; transform-box:fill-box; opacity:0; animation:nodeIn .5s ease forwards; }
+  .hero-trace circle:nth-of-type(1){ animation-delay:.15s; }
+  .hero-trace circle:nth-of-type(2){ animation-delay:.30s; }
+  .hero-trace circle:nth-of-type(3){ animation-delay:.45s; }
+  .hero-trace circle:nth-of-type(4){ animation-delay:.60s; }
+  .hero-trace circle:nth-of-type(5){ animation-delay:.30s; }
+  .hero-trace circle:nth-of-type(6){ animation-delay:.45s; }
+  .hero-trace circle:nth-of-type(7){ animation-delay:.60s; }
+  .hero-trace circle:nth-of-type(8){ animation-delay:.75s; }
+  .hero-trace circle:nth-of-type(9){ animation-delay:.5s; }
+  .hero-trace circle:nth-of-type(10){ animation-delay:.65s; }
+  .hero-trace circle:nth-of-type(11){ animation-delay:.8s; }
+  .hero-trace circle:nth-of-type(12){ animation-delay:.95s; }
+  .hero-trace path{ opacity:0; animation:pathFade .8s ease forwards; }
+  @keyframes pathFade{ from{ opacity:0; } to{ opacity:1; } }
+  .hero-trace path:nth-of-type(1){ animation-delay:.1s; }
+  .hero-trace path:nth-of-type(2){ animation-delay:.25s; }
+  .hero-trace path:nth-of-type(3){ animation-delay:.4s; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#home" class="brand">
+      <svg class="brand-mark" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="4" cy="21" r="2.4" fill="#1D6B57"/>
+        <circle cx="12" cy="13" r="2.4" fill="#1D6B57"/>
+        <circle cx="22" cy="5" r="2.4" fill="#BD7F2C"/>
+        <path d="M6 19L10 15M14 11L19 7" stroke="#1D6B57" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-text">Digital Trace</span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <ul class="nav-list" id="navList">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#safety">Safety</a></li>
+      <li><a href="#footprint">Footprint</a></li>
+      <li><a href="#findings">Survey &amp; Findings</a></li>
+      <li><a href="#methodology">Methodology</a></li>
+      <li><a href="#guide">Safety Guide</a></li>
+      <li><a href="#keyfindings">Key Findings</a></li>
+      <li><a href="#report">Report</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </div>
+</nav>
+<section id="home" class="hero">
+  <svg class="hero-trace" viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path d="M60 480 L180 400 L260 430 L360 320 L470 350 L560 240" />
+    <path d="M700 500 L790 420 L860 440 L960 330 L1040 360 L1140 250" />
+    <path d="M420 80 L500 150 L610 120 L700 190 L780 150 L880 210" />
+    <circle cx="60" cy="480" r="4"/><circle cx="260" cy="430" r="4"/><circle cx="470" cy="350" r="4"/><circle cx="560" cy="240" r="5"/>
+    <circle cx="700" cy="500" r="4"/><circle cx="860" cy="440" r="4"/><circle cx="1040" cy="360" r="4"/><circle cx="1140" cy="250" r="5"/>
+    <circle cx="420" cy="80" r="4"/><circle cx="610" cy="120" r="4"/><circle cx="780" cy="150" r="4"/><circle cx="880" cy="210" r="5"/>
+  </svg>
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><span class="dot"></span> Community Engagement Project &nbsp;·&nbsp; B.Sc. (Information Technology), Semester V</div>
+    <h1>Social Media Safety &amp; Digital Footprint Awareness</h1>
+    <p class="hero-lede">A field survey of 55 respondents from a college and its surrounding community, measuring not just what people know about online safety, but whether that knowledge shows up in what they actually do.</p>
+    <div class="hero-meta">
+      <span>55 respondents</span>
+      <span>21 survey questions</span>
+      <span>94.8% response rate</span>
+      <span>Descriptive survey design</span>
+    </div>
+    <div class="hero-actions">
+      <a href="#safety" class="btn btn-gold">Explore the Project</a>
+      <a href="#findings" class="btn btn-ghost-light">View Survey Findings</a>
+    </div>
+  </div>
+</section>
+<section id="safety" class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker"><span class="num">01</span> Social Media Safety</div>
+      <h2 class="h-section">Six habits that keep an account safe</h2>
+      <p class="lede">Safety on social media isn't one setting — it's a set of small, repeatable habits: how you lock your account, how you verify who's messaging you, and how you react in the few seconds before you tap something you shouldn't.</p>
+    </div>
+
+    <div class="grid-2">
+      <article class="topic-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="11" width="14" height="9.5" rx="2"/>
+          <path d="M8 11V7.3a4 4 0 0 1 8 0V11"/>
+          <circle cx="12" cy="15.6" r="1.4" fill="currentColor" stroke="none"/>
+        </svg>
+        <h3>Strong passwords</h3>
+        <p>A strong password is long, unique to that one account, and not reused anywhere else — so if one site is breached, the rest of your accounts stay safe. A password manager makes this painless: it remembers dozens of unique passwords so you don't have to.</p>
+        <span class="stat-chip">54.5% already use a strong, unique password</span>
+      </article>
+
+      <article class="topic-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3.2l6.7 2.6v5.4c0 4.6-3 7.3-6.7 8.6-3.7-1.3-6.7-4-6.7-8.6V5.8L12 3.2z"/>
+          <path d="M8.7 12l2.3 2.3 4.3-4.6"/>
+        </svg>
+        <h3>Two-factor authentication</h3>
+        <p>2FA adds a second check after your password — a code sent to your phone or generated by an app — so a stolen password alone can't get someone into your account. It's one of the single most effective account protections available, and it takes about a minute to turn on.</p>
+        <span class="stat-chip gold">Just 41.8% have 2FA on — the weakest habit this survey measured</span>
+      </article>
+
+      <article class="topic-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="7" x2="20" y2="7"/><circle cx="14" cy="7" r="2.1" fill="currentColor" stroke="none"/>
+          <line x1="4" y1="12.5" x2="20" y2="12.5"/><circle cx="9" cy="12.5" r="2.1" fill="currentColor" stroke="none"/>
+          <line x1="4" y1="18" x2="20" y2="18"/><circle cx="16" cy="18" r="2.1" fill="currentColor" stroke="none"/>
+        </svg>
+        <h3>Privacy settings</h3>
+        <p>Privacy settings decide who can see your posts, find your profile, or send you a request. They're worth a few minutes every so often — platforms change their defaults more often than most people check them.</p>
+        <span class="stat-chip">65.5% keep their main account private — but only 23.6% review settings regularly</span>
+      </article>
+
+      <article class="topic-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 16a3.6 3.6 0 0 1 0-5.1l2.1-2.1"/>
+          <path d="M16 8a3.6 3.6 0 0 1 0 5.1l-2.1 2.1"/>
+          <line x1="9.5" y1="14.5" x2="14.5" y2="9.5"/>
+          <circle cx="19.2" cy="5" r="1.5" fill="currentColor" stroke="none"/>
+        </svg>
+        <h3>Suspicious links</h3>
+        <p>Unexpected links — even from people you know — are one of the easiest ways an account gets taken over. The safe move is to pause: check where a link actually leads, and verify with the sender through another channel before tapping.</p>
+        <span class="stat-chip brick">81.8% have already received a suspicious link or request</span>
+      </article>
+
+      <article class="topic-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="10.5" cy="9" r="3.4"/>
+          <path d="M4.5 20c0-3.6 2.8-5.6 6-5.6s6 2 6 5.6"/>
+          <path d="M17.3 4.7l3 3M20.3 4.7l-3 3"/>
+        </svg>
+        <h3>Fake accounts</h3>
+        <p>Fake and impersonation accounts often show a thin history, borrowed photos, and a rush to connect or ask for something. A quick check of someone's profile before accepting a request catches most of them.</p>
+        <span class="stat-chip brick">Named the #1 perceived risk — by 72.7% of respondents</span>
+      </article>
+
+      <article class="topic-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="6" width="18" height="12.5" rx="1.6"/>
+          <path d="M3.5 7l8.5 6 8.5-6"/>
+          <path d="M14.2 18.5c1.4 0 2.5-.9 2.5-2.2 0-.9-.7-1.6-1.5-1.6-.7 0-1.3.5-1.3 1.2 0 .5.4.8.8.8"/>
+        </svg>
+        <h3>Phishing &amp; scams</h3>
+        <p>Phishing messages borrow urgency and trust — a "your account will be locked," a too-good prize, a friend suddenly asking for money. Slowing down for ten seconds is usually enough to spot the mismatch.</p>
+        <span class="stat-chip gold">Only 47.3% feel confident (4 or 5 out of 5) spotting one</span>
+      </article>
+    </div>
+  </div>
+</section>
+<section id="footprint" class="section section--alt">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker"><span class="num">02</span> Digital Footprint</div>
+      <h2 class="h-section">The trail you leave without noticing</h2>
+      <p class="lede">Every post, comment, like and profile update adds to a record that outlives the moment you made it. A digital footprint isn't one big decision — it's the sum of many small, ordinary ones.</p>
+    </div>
+
+    <div class="grid-2">
+      <article class="topic-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="5" cy="19" r="1.8" fill="currentColor" stroke="none"/>
+          <circle cx="12" cy="12" r="1.8" fill="currentColor" stroke="none"/>
+          <circle cx="19" cy="6" r="1.8" fill="currentColor" stroke="none"/>
+          <path d="M6.5 17.5L10.5 13.5" stroke-dasharray="3 3"/>
+          <path d="M13.5 10.5L17.5 7.5" stroke-dasharray="3 3"/>
+        </svg>
+        <h3>What is a digital footprint?</h3>
+        <p>It's the collection of traces your online activity leaves behind — posts, comments, photos, likes, public profiles and interactions — that together form a lasting, searchable record of your interests, opinions and relationships.</p>
+        <span class="stat-chip">60.0% say they clearly understand the term</span>
+      </article>
+
+      <article class="topic-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="5" width="18" height="14" rx="1.8"/>
+          <circle cx="8.5" cy="10" r="1.7"/>
+          <path d="M3.8 17l5.2-5.2 3 3 3.3-4.5 4.9 6.7"/>
+        </svg>
+        <h3>What you post online</h3>
+        <p>Location tags, school or workplace names, and daily routines are small details on their own, but combined they can sketch a surprisingly complete picture of where someone is and when. Most respondents already hold back on this.</p>
+        <span class="stat-chip">74.5% rarely or never share such details publicly</span>
+      </article>
+
+      <article class="topic-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3.5" y="8" width="17" height="11" rx="1.6"/>
+          <path d="M8.5 8V6.3a1.6 1.6 0 0 1 1.6-1.6h3.8a1.6 1.6 0 0 1 1.6 1.6V8"/>
+          <line x1="3.5" y1="13" x2="20.5" y2="13"/>
+        </svg>
+        <h3>Future education &amp; employment impact</h3>
+        <p>Admissions officers and hiring managers routinely look up public profiles. A post that felt harmless at 16 can resurface at a scholarship interview or a job application years later.</p>
+        <span class="stat-chip gold">80.0% believe posts can affect future opportunities</span>
+      </article>
+
+      <article class="topic-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 6.7A2.6 2.6 0 0 1 6.6 4.1h10.8A2.6 2.6 0 0 1 20 6.7v6.8a2.6 2.6 0 0 1-2.6 2.6H10L6 19.6V16.1H6.6A2.6 2.6 0 0 1 4 13.5V6.7z"/>
+          <path d="M8.7 10l1.9 1.9L14.5 8"/>
+        </svg>
+        <h3>Responsible posting</h3>
+        <p>The simplest habit is also the most effective: pause and ask whether this would still feel fine if a teacher, employer or future you saw it. Right now that pause isn't yet automatic for most respondents.</p>
+        <span class="stat-chip brick">Only 20% say they <em>always</em> reflect before posting</span>
+      </article>
+    </div>
+  </div>
+</section>
+<section id="findings" class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker"><span class="num">03</span> Survey &amp; Findings</div>
+      <h2 class="h-section">55 respondents, 21 questions, one clear pattern</h2>
+      <p class="lede">The questionnaire was built in Google Forms: <a href="https://docs.google.com/forms/d/e/1FAIpQLSdFMfxQfrNGDr5p0S1chKs-0CNTqQ_w9PhGPMDWeREtL9-bsA/viewform?usp=publish-editor" target="new">Google form</a> six thematic blocks — respondent profile, usage, account security, threat exposure, digital footprint awareness, and privacy management — and administered as a descriptive survey between 20 August to 3 September 2026. 58 questionnaires went out, 55 usable responses came back, a 94.8% response rate.</p>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="stat-num">55</div><div class="stat-label">Total usable responses</div></div>
+      <div class="stat"><div class="stat-num">74.5%</div><div class="stat-label">Aged 18–24</div></div>
+      <div class="stat"><div class="stat-num">65.5%</div><div class="stat-label">Keep their main account private</div></div>
+      <div class="stat"><div class="stat-num">41.8%</div><div class="stat-label">Have 2FA enabled</div></div>
+      <div class="stat"><div class="stat-num">60.0%</div><div class="stat-label">Understand digital footprint</div></div>
+      <div class="stat"><div class="stat-num">80.0%</div><div class="stat-label">Believe posts affect their future</div></div>
+      <div class="stat"><div class="stat-num">76.4%</div><div class="stat-label">Know how to block / report</div></div>
+      <div class="stat"><div class="stat-num">74.5%</div><div class="stat-label">Would attend an awareness session</div></div>
+    </div>
+
+    <!-- Block A -->
+    <div class="chart-group">
+      <div class="chart-group-title">Block A · Respondent profile</div>
+      <p class="chart-group-desc">A young, largely college-age group of respondents.</p>
+
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q1. Age group</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="1" data-type="bar"></div>
+        <p class="chart-note">Three in four respondents fall in the 18–24 bracket — a young-adult, largely college-age sample.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q2. What best describes you?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="2" data-type="bar"></div>
+        <p class="chart-note">College and university students make up the large majority of respondents, at 76.4%.</p>
+      </div>
+    </div>
+
+    <!-- Block B -->
+    <div class="chart-group">
+      <div class="chart-group-title">Block B · Usage pattern and platforms</div>
+      <p class="chart-group-desc">How often people are online, where, and why.</p>
+
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q3. How frequently do you use social media?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="3" data-type="bar"></div>
+        <p class="chart-note">Two in five respondents spend three to five hours a day on social media; a fifth report more than five.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q4. Which social-media platforms do you use most frequently?</div><span class="chart-tag">Multiple choice</span></div>
+        <div class="chart-mount" data-q="4" data-type="bar"></div>
+        <p class="chart-note">WhatsApp, Instagram and YouTube dominate — each used by four in five respondents or more.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q5. What do you primarily use social media for?</div><span class="chart-tag">Multiple choice</span></div>
+        <div class="chart-mount" data-q="5" data-type="bar"></div>
+        <p class="chart-note">Staying in touch with friends and family is the single most common reason for using social media.</p>
+      </div>
+    </div>
+
+    <!-- Block C -->
+    <div class="chart-group">
+      <div class="chart-group-title">Block C · Account security practices</div>
+      <p class="chart-group-desc">Privacy, passwords, and two-factor authentication.</p>
+
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q6. Is your main social-media account private?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="6" data-type="donut"></div>
+        <p class="chart-note">About two in three respondents keep their main account private.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q7. Do you use strong and unique passwords for your social-media accounts?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="7" data-type="donut"></div>
+        <p class="chart-note">Just over half report using a strong, unique password.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q8. Do you use Two-Factor Authentication (2FA) on your social-media accounts?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="8" data-type="donut"></div>
+        <p class="chart-note">2FA is the weakest security habit measured: only 41.8% have it enabled, and 8 respondents don't know what it is.</p>
+      </div>
+    </div>
+
+    <!-- Block D -->
+    <div class="chart-group">
+      <div class="chart-group-title">Block D · Threat exposure and response</div>
+      <p class="chart-group-desc">What respondents encounter, how they react, and how confident they feel.</p>
+
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q9. Have you ever received a suspicious message, link, or friend/follow request on social media?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="9" data-type="donut"></div>
+        <p class="chart-note">More than four in five respondents have already received a suspicious message, link or request.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q10. What would you do if you received a suspicious link from an unknown person?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="10" data-type="bar"></div>
+        <p class="chart-note">Ignoring or deleting a suspicious link is the most common response, well ahead of reporting it.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q17. Which of the following do you think are major social-media risks?</div><span class="chart-tag">Multiple choice</span></div>
+        <div class="chart-mount" data-q="17" data-type="bar"></div>
+        <p class="chart-note">Fake accounts and impersonation top the list of perceived risks, ahead of scams and cyberbullying.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q18. How confident are you in identifying a fake account or online scam?</div><span class="chart-tag">Scale 1–5</span></div>
+        <div class="chart-mount" data-q="18" data-type="bar"></div>
+        <p class="chart-note">Confidence clusters in the middle of the scale — only 47.3% rate themselves a 4 or 5 out of 5.</p>
+      </div>
+    </div>
+
+    <!-- Block E -->
+    <div class="chart-group">
+      <div class="chart-group-title">Block E · Digital footprint awareness</div>
+      <p class="chart-group-desc">What people share, and how much thought goes into it.</p>
+
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q11. Before posting something online, how often do you think about its possible future consequences?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="11" data-type="bar"></div>
+        <p class="chart-note">Reflection before posting is inconsistent — only one in five respondents say they always do it.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q12. Do you know what a digital footprint means?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="12" data-type="donut"></div>
+        <p class="chart-note">Three in five respondents say they clearly understand the term digital footprint.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q13. Do you think social-media posts can affect a person's future education or employment opportunities?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="13" data-type="donut"></div>
+        <p class="chart-note">Four in five respondents believe their posts can affect future education or employment opportunities.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q14. How often do you share personal information such as your location, school/college, workplace, or daily activities publicly?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="14" data-type="bar"></div>
+        <p class="chart-note">Rarely or never sharing personal details publicly is the norm — nearly three in four respondents say so.</p>
+      </div>
+    </div>
+
+    <!-- Block F -->
+    <div class="chart-group">
+      <div class="chart-group-title">Block F · Privacy management and learning</div>
+      <p class="chart-group-desc">Maintenance habits, reporting knowledge, and appetite for learning more.</p>
+
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q15. Do you regularly check or update your social-media privacy settings?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="15" data-type="bar"></div>
+        <p class="chart-note">Regular privacy-setting review is rare — only 23.6% do it as a habit.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q16. Do you know how to block and report a suspicious or abusive account?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="16" data-type="donut"></div>
+        <p class="chart-note">Knowing how to block or report an account is a genuine strength, at 76.4%.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q19. Have you ever changed your social-media behaviour after learning about an online safety risk?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="19" data-type="donut"></div>
+        <p class="chart-note">Just over half have changed an online habit after learning about a specific risk.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q20. What do you think should be done to improve social-media safety awareness among young people?</div><span class="chart-tag">Open response, categorised</span></div>
+        <div class="chart-mount" data-q="20" data-type="bar"></div>
+        <p class="chart-note">Workshops and awareness sessions in college are the most requested way to build safety skills.</p>
+      </div>
+      <div class="chart-block">
+        <div class="chart-head"><div class="chart-q">Q21. After completing this survey, would you be interested in learning more about protecting your privacy and digital footprint?</div><span class="chart-tag">Single choice</span></div>
+        <div class="chart-mount" data-q="21" data-type="donut"></div>
+        <p class="chart-note">Three in four respondents would attend a dedicated session to learn more.</p>
+      </div>
+    </div>
+
+    <!-- Dataset explorer -->
+    <div class="chart-group" id="dataset">
+      <div class="chart-group-title">Dataset explorer</div>
+      <p class="chart-group-desc">All 55 response records behind the charts above, identified only by serial code — no names or contact details were collected. Search across any field, or open a row for the complete set of 21 answers.</p>
+
+      <div class="table-toolbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg>
+          <input type="text" id="datasetSearch" placeholder="Search the responses…" autocomplete="off">
+        </div>
+        <span class="table-count" id="datasetCount">55 responses</span>
+      </div>
+
+      <div class="table-scroll">
+        <table class="data-table" id="datasetTable">
+          <thead><tr id="datasetHead"></tr></thead>
+          <tbody id="datasetBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+<section id="methodology" class="section section--alt">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker"><span class="num">04</span> Research Methodology</div>
+      <h2 class="h-section">How the survey was built and read</h2>
+      <p class="lede">A field project is only as trustworthy as the process behind it. Here's exactly how the questionnaire was designed, who it reached, and how the raw responses became the charts above.</p>
+    </div>
+
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <h3>Research design</h3>
+          <p>A descriptive survey design: a structured questionnaire administered once to each respondent, producing cross-sectional data analysed through frequencies, percentages, and a direct side-by-side comparison of paired awareness and practice indicators.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <h3>Questionnaire design</h3>
+          <p>21 items grouped into six thematic blocks (A–F, shown as the section headers above). Most use single-choice answers; three use checkbox-style multiple selection; one is a five-point confidence scale; one is open-ended. The instrument was pilot-tested with 5 respondents, which led to two questions being reworded for clarity.</p>
+          <details>
+            <summary class="btn btn-ghost" style="margin-top:6px;">View all 21 questions</summary>
+            <ul style="margin-top:16px; display:flex; flex-direction:column; gap:8px;">
+              <li style="font-size:14.5px; color:var(--ink-soft);">1. Age Group</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">2. What best describes you?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">3. How frequently do you use social media?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">4. Which social-media platforms do you use most frequently?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">5. What do you primarily use social media for?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">6. Is your main social-media account private?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">7. Do you use strong and unique passwords for your social-media accounts?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">8. Do you use Two-Factor Authentication (2FA) on your social-media accounts?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">9. Have you ever received a suspicious message, link, or friend/follow request on social media?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">10. What would you do if you received a suspicious link from an unknown person?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">11. Before posting something online, how often do you think about its possible future consequences?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">12. Do you know what a digital footprint means?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">13. Do you think social-media posts can affect a person's future education or employment opportunities?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">14. How often do you share personal information such as your location, school/college, workplace, or daily activities publicly?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">15. Do you regularly check or update your social-media privacy settings?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">16. Do you know how to block and report a suspicious or abusive account?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">17. Which of the following do you think are major social-media risks?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">18. How confident are you in identifying a fake account or online scam?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">19. Have you ever changed your social-media behaviour after learning about an online safety risk?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">20. What do you think should be done to improve social-media safety awareness among young people?</li>
+              <li style="font-size:14.5px; color:var(--ink-soft);">21. After completing this survey, would you be interested in learning more about protecting your privacy and digital footprint?</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <h3>Population, sample &amp; sampling technique</h3>
+          <p>Active social-media users in a college and its surrounding community, sampled by convenience — the standard approach for a time-bound field project where respondents must be reachable in person or through college networks. 58 questionnaires were distributed and 55 usable responses came back (3 incomplete returns were excluded), a 94.8% response rate. The realised sample skews toward college students aged 18–24; this is reported transparently rather than presented as representative of a wider population.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">04</div>
+        <div>
+          <h3>Data collection</h3>
+          <p>Primary data were collected between 20 August To 3 September 2026, via a Google Form administered two ways: in person on campus and in the surrounding neighbourhood, and through a shared link circulated to community contacts. Every respondent was told the study's purpose and that participation was voluntary and anonymous before starting. Average completion time was 6–8 minutes.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">05</div>
+        <div>
+          <h3>Data processing</h3>
+          <p>Responses were exported to a spreadsheet, checked for completeness, and coded. Percentages for single-choice items use 55 as the base. For the three multiple-selection items (platforms, purpose, perceived risks), each option is counted separately, so those totals exceed 55 — they represent selections, not unique respondents. Percentages are rounded to one decimal place, so some columns don't sum to exactly 100.0%.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">06</div>
+        <div>
+          <h3>Ethics &amp; limitations</h3>
+          <p>No names, passwords, account handles, phone numbers or addresses were collected — responses are identified only by a serial code. Participation was voluntary with verbal consent, and respondents under 18 were surveyed only with a teacher or parent present. Honestly stated, the study also has real limits: the convenience sample is small and skews toward college-age respondents, all data is self-reported (so protective practice may be somewhat overstated), and the design is cross-sectional — it captures one point in time, not a change over time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="guide" class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker"><span class="num">05</span> Safety Guide</div>
+      <h2 class="h-section">Four moments, four habits</h2>
+      <p class="lede">Most social-media risk comes down to a handful of ordinary moments. Here's what to do in each one — short enough to actually remember.</p>
+    </div>
+
+    <div class="guide-grid">
+      <article class="guide-card c-click">
+        <svg class="guide-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 3l4.6 15.6 2-6.2 6.2-2L6 3z"/>
+        </svg>
+        <h3>Before You Click</h3>
+        <ol>
+          <li>Stop before tapping an unexpected link — even one from someone you know.</li>
+          <li>Preview where it actually leads, rather than trusting the link text alone.</li>
+          <li>Verify with the sender through a different channel if anything feels off.</li>
+          <li>Report and delete it if it still looks suspicious — don't just ignore it and move on.</li>
+        </ol>
+      </article>
+
+      <article class="guide-card c-post">
+        <svg class="guide-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 20l1-4.2L14.8 6 18 9.2 8.2 19 4 20z"/>
+          <path d="M13 7.2L16.8 11"/>
+        </svg>
+        <h3>Before You Post</h3>
+        <ol>
+          <li>Ask whether this would still feel fine if a teacher, employer, or future you saw it.</li>
+          <li>Leave out live location, school or workplace names, and daily routines where you can.</li>
+          <li>Remember that screenshots and shares outlast the original post.</li>
+          <li>When in doubt, save it as a draft and revisit it tomorrow.</li>
+        </ol>
+      </article>
+
+      <article class="guide-card c-protect">
+        <svg class="guide-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3.2l6.7 2.6v5.4c0 4.6-3 7.3-6.7 8.6-3.7-1.3-6.7-4-6.7-8.6V5.8L12 3.2z"/>
+          <circle cx="12" cy="10.8" r="1.2" fill="currentColor" stroke="none"/>
+          <line x1="12" y1="12" x2="12" y2="13.8"/>
+        </svg>
+        <h3>Protect Your Account</h3>
+        <ol>
+          <li>Use a long, unique password for every account — a password manager makes this painless.</li>
+          <li>Turn on two-factor authentication wherever it's offered.</li>
+          <li>Set your main account to private and review who can see it every few months.</li>
+          <li>Check which apps and devices still have access, and remove ones you don't recognise.</li>
+        </ol>
+      </article>
+
+      <article class="guide-card c-wrong">
+        <svg class="guide-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.3 3.6L2 18h20L13.7 3.6a1.8 1.8 0 0 0-3.4 0z"/>
+          <line x1="12" y1="9.5" x2="12" y2="13.5"/>
+          <circle cx="12" cy="16.3" r="0.9" fill="currentColor" stroke="none"/>
+        </svg>
+        <h3>If Something Goes Wrong</h3>
+        <ol>
+          <li>Block the account first — you can always undo it later.</li>
+          <li>Report it through the platform's built-in reporting tool.</li>
+          <li>In India, serious cases can also go to the National Cyber Crime Reporting Portal (cybercrime.gov.in) or the 1930 helpline.</li>
+          <li>Tell someone you trust, especially if it involves harassment or impersonation.</li>
+          <li>Save screenshots as evidence before the content can be deleted or edited.</li>
+        </ol>
+      </article>
+    </div>
+  </div>
+</section>
+<section id="keyfindings" class="section section--ink">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker"><span class="num">06</span> Key Findings</div>
+      <h2 class="h-section">The gap between belief and habit</h2>
+      <p class="lede">Placed side by side, the same three ideas repeat: respondents already believe the risk is real. Far fewer have turned that belief into a routine.</p>
+    </div>
+
+    <div style="display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; margin-bottom:8px;">
+      <div style="font-family:var(--font-display); font-size:clamp(56px,9vw,96px); font-weight:600; color:var(--gold); line-height:1;">56.4</div>
+      <div style="font-size:16px; color:#D3E4DC; max-width:34ch;">percentage-point gap between believing posts affect the future (80.0%) and actually reviewing privacy settings regularly (23.6%) — the widest gap this survey measured.</div>
+    </div>
+
+    <div style="margin-top:40px; display:flex; flex-direction:column;">
+      <div style="display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:end; padding:22px 0; border-top:1px solid rgba(255,255,255,0.18);">
+        <div>
+          <div style="font-size:13.5px; color:#D3E4DC; margin-bottom:8px;">Believes posts affect future opportunities <span style="font-family:var(--font-mono); opacity:.7;">Q13</span></div>
+          <div style="height:11px; background:rgba(255,255,255,0.14); border-radius:2px; overflow:hidden;"><div style="height:100%; width:80.0%; background:var(--gold);"></div></div>
+          <div style="font-family:var(--font-display); font-size:26px; margin-top:8px; color:var(--paper);">80.0%</div>
+        </div>
+        <div style="font-family:var(--font-mono); font-size:12px; color:#9FC4B8; padding-bottom:30px;">vs</div>
+        <div>
+          <div style="font-size:13.5px; color:#D3E4DC; margin-bottom:8px;">Reviews privacy settings regularly <span style="font-family:var(--font-mono); opacity:.7;">Q15</span></div>
+          <div style="height:11px; background:rgba(255,255,255,0.14); border-radius:2px; overflow:hidden;"><div style="height:100%; width:23.6%; background:var(--brick);"></div></div>
+          <div style="font-family:var(--font-display); font-size:26px; margin-top:8px; color:var(--paper);">23.6%</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:end; padding:22px 0; border-top:1px solid rgba(255,255,255,0.18);">
+        <div>
+          <div style="font-size:13.5px; color:#D3E4DC; margin-bottom:8px;">Knows how to block or report an account <span style="font-family:var(--font-mono); opacity:.7;">Q16</span></div>
+          <div style="height:11px; background:rgba(255,255,255,0.14); border-radius:2px; overflow:hidden;"><div style="height:100%; width:76.4%; background:var(--gold);"></div></div>
+          <div style="font-family:var(--font-display); font-size:26px; margin-top:8px; color:var(--paper);">76.4%</div>
+        </div>
+        <div style="font-family:var(--font-mono); font-size:12px; color:#9FC4B8; padding-bottom:30px;">vs</div>
+        <div>
+          <div style="font-size:13.5px; color:#D3E4DC; margin-bottom:8px;">Has enabled two-factor authentication <span style="font-family:var(--font-mono); opacity:.7;">Q8</span></div>
+          <div style="height:11px; background:rgba(255,255,255,0.14); border-radius:2px; overflow:hidden;"><div style="height:100%; width:41.8%; background:var(--brick);"></div></div>
+          <div style="font-family:var(--font-display); font-size:26px; margin-top:8px; color:var(--paper);">41.8%</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:end; padding:22px 0; border-top:1px solid rgba(255,255,255,0.18); border-bottom:1px solid rgba(255,255,255,0.18);">
+        <div>
+          <div style="font-size:13.5px; color:#D3E4DC; margin-bottom:8px;">Understands the term "digital footprint" <span style="font-family:var(--font-mono); opacity:.7;">Q12</span></div>
+          <div style="height:11px; background:rgba(255,255,255,0.14); border-radius:2px; overflow:hidden;"><div style="height:100%; width:60.0%; background:var(--gold);"></div></div>
+          <div style="font-family:var(--font-display); font-size:26px; margin-top:8px; color:var(--paper);">60.0%</div>
+        </div>
+        <div style="font-family:var(--font-mono); font-size:12px; color:#9FC4B8; padding-bottom:30px;">vs</div>
+        <div>
+          <div style="font-size:13.5px; color:#D3E4DC; margin-bottom:8px;">Uses a strong, unique password <span style="font-family:var(--font-mono); opacity:.7;">Q7</span></div>
+          <div style="height:11px; background:rgba(255,255,255,0.14); border-radius:2px; overflow:hidden;"><div style="height:100%; width:54.5%; background:var(--brick);"></div></div>
+          <div style="font-family:var(--font-display); font-size:26px; margin-top:8px; color:var(--paper);">54.5%</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:40px; border-left:3px solid var(--gold); padding:4px 0 4px 24px; max-width:var(--measure);">
+      <p style="font-family:var(--font-display); font-size:21px; line-height:1.5; color:var(--paper); margin-bottom:8px;">Not an awareness problem — a procedural one</p>
+      <p style="color:#D3E4DC; font-size:15.5px;">Respondents who could describe the danger of a fake profile in detail had often never opened their own privacy settings. That's encouraging, in a way: procedural gaps close faster than attitudes change, and 74.5% of respondents said they'd attend a session to close it.</p>
+    </div>
+  </div>
+</section>
+<section id="report" class="section section--alt">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker"><span class="num">07</span> Project Report</div>
+      <h2 class="h-section">The full academic submission</h2>
+      <p class="lede">The front matter and complete report behind this site, exactly as submitted for the Community Engagement Project.</p>
+    </div>
+
+    <!-- <div class="doc-grid">
+      <div class="doc-card">
+        <h3>Certificate</h3>
+        <p><strong>Prahladrai Dalmia Lions College of Commerce &amp; Economics</strong> — Government Aided &amp; Affiliated to University of Mumbai &amp; AICTE, New Delhi. NAAC Re-accredited with 'A' Grade (III Cycle) · ISO 21001:2018 Certified.</p>
+        <p>This is to certify that <u>Mr Sahil Gupta & Shourabh Gupta. /Ms. Riddhima Gupta & Jyoti Gupta.</u> bearing Roll No. <u>311,312,310,309 </u> a bona fide student of this college studying in B.Sc. (Information Technology), Semester V, has satisfactorily completed the field project titled "Social Media Safety &amp; Digital Footprint Awareness" — involving a 21-item questionnaire administered to 55 respondents — as a Community Engagement Project for the academic year 2026–2027.</p>
+        <p>To the best of my knowledge, the work is original, was carried out under my guidance, and the information included is correct.</p>
+        <div class="sig-row"><span>Internal Guide / Mentor</span><span>Head of Department</span><span>Principal</span></div>
+      </div> -->
+
+      <!-- <div class="doc-card">
+        <h3>Student's Declaration</h3>
+        <p>I, Mr./Ms. <span class="blank">&nbsp;</span>, bearing Roll No. <span class="blank">&nbsp;</span>, a student of Prahladrai Dalmia Lions College of Commerce &amp; Economics studying in B.Sc. (Information Technology), Semester V, hereby declare that I completed this field project during the academic year 2026–2027 as part of the Community Engagement Project.</p>
+        <p>The information and data are true, emerging from the primary survey of 55 respondents and from secondary sources credited in the References. This report has not been submitted elsewhere for any degree, diploma or certificate.</p>
+        <div class="sig-row"><span>Signature of Student, with date</span></div>
+      </div>
+    </div> -->
+
+      <!-- <div class="doc-card" style="margin-top:20px;">
+        <h3>Acknowledgement</h3>
+        <p>I thank the University of Mumbai for including the Community Engagement Project in the curriculum, and our Principal, Prof. (Dr.) D. N. Ganjewar, and Vice-Principal, Ms. Subhashini Naikar, for the academic environment and facilities that made this project possible. My thanks to our coordinator, CA Durgesh Y. Kenkre, for his encouragement and timely guidance, and to my project guide for the careful supervision that shaped this report at every stage. I'm sincerely grateful to the 55 respondents who gave their time and candour — their responses form the foundation of this study — and to the college library and computer laboratory staff, my parents, and my peers for their support throughout.</p>
+      </div> -->
+
+    <div class="pdf-panel">
+      <div class="pdf-panel-head">
+        <div>
+          <h3>Full report (PDF)</h3>
+          <div class="pdf-panel-meta">60 pages · A4 · Submitted September 2026</div>
+        </div>
+        <div class="pdf-actions">
+          <a href="report_final.pdf" target="_blank" rel="noopener" class="btn btn-ghost">Open Full Screen</a>
+          <a href="report_final.pdf" download class="btn btn-teal">Download the Report</a>
+        </div>
+      </div>
+      <div class="pdf-frame-wrap">
+        <iframe src="report_final.pdf" title="Full field project report PDF" loading="lazy">
+          <p class="pdf-fallback">Your browser can't display the embedded PDF. <a href="report_final.pdf">Open the report directly</a> instead.</p>
+        </iframe>
+      </div>
+    </div>
+    <!-- <p style="margin-top:12px; font-size:13px; color:var(--ink-soft);">Keep <code style="font-family:var(--font-mono);">report_final.pdf</code> in the same folder as this page so the preview and download links both work.</p> -->
+  </div>
+</section>
+<section id="about" class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker"><span class="num">08</span> About the Project</div>
+      <h2 class="h-section">Who this project is by</h2>
+      <p class="lede">A Community Engagement Project submitted individually within a group project, for B.Sc. (Information Technology), Semester V.</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="id-card">
+        <div class="id-row">
+          <div class="id-label">STUDENT NAME</div>
+          <div class="id-value">Sahil Gupta, Shourabh Gupta, Riddhima Gupta & Jyoti Gupta</div>
+        </div>
+        <div class="id-row">
+          <div class="id-label">ROLL NUMBER</div>
+          <div class="id-value">311,312,310,309</div>
+        </div>
+        <div class="id-row">
+          <div class="id-label">COURSE</div>
+          <div class="id-value">B.Sc. (Information Technology), Semester V</div>
+        </div>
+        <div class="id-row">
+          <div class="id-label">COLLEGE</div>
+          <div class="id-value">Prahladrai Dalmia Lions College of Commerce &amp; Economics</div>
+        </div>
+        <div class="id-row">
+          <div class="id-label">PROJECT GUIDE / MENTOR</div>
+          <div class="id-value">Dr Ruplai Mishra</div>
+        </div>
+        <div class="id-row">
+          <div class="id-label">PROJECT TYPE</div>
+          <div class="id-value">Community Engagement Project (CEP)</div>
+        </div>
+        <div class="id-row">
+          <div class="id-label">Year</div>
+          <div class="id-value">Academic Year 2026–2027</div>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="font-size:19px; margin-bottom:16px;">Project objectives</h3>
+        <ul class="obj-list">
+          <li><span class="dot"></span> Assess the pattern and intensity of social-media usage — time spent, platforms, and purposes of use.</li>
+          <li><span class="dot"></span> Examine account-security practices: privacy, password strength, and two-factor authentication.</li>
+          <li><span class="dot"></span> Measure awareness of the digital footprint and its possible effect on future education and employment.</li>
+          <li><span class="dot"></span> Identify the risks respondents perceive as most serious and how they respond to suspicious contact.</li>
+          <li><span class="dot"></span> Determine how far awareness of risk has translated into changed behaviour — the awareness-to-action gap.</li>
+          <li><span class="dot"></span> Develop practical, community-level recommendations for safer social-media use.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <span class="brand-text">Digital Trace</span>
+      <p class="footer-note">Social Media Safety &amp; Digital Footprint Awareness — a Community Engagement Project, B.Sc. (Information Technology), Prahladrai Dalmia Lions College of Commerce &amp; Economics.</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#findings">Survey data</a></li>
+      <li><a href="#guide">Safety guide</a></li>
+      <li><a href="#report">Full report</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </div>
+</footer>
+<script>
+(function(){
+  'use strict';
+
+  const SURVEY_DATA = [{"q":1,"question":"Age Group","multiSelect":false,"breakdown":[{"label":"18–24","count":41,"pct":74.5},{"label":"13–17","count":6,"pct":10.9},{"label":"25–34","count":6,"pct":10.9},{"label":"35–44","count":2,"pct":3.6}]},{"q":2,"question":"Occupation / Status","multiSelect":false,"breakdown":[{"label":"College/university student","count":42,"pct":76.4},{"label":"School student","count":6,"pct":10.9},{"label":"Working professional","count":5,"pct":9.1},{"label":"Other","count":2,"pct":3.6}]},{"q":3,"question":"Daily Social-Media Usage","multiSelect":false,"breakdown":[{"label":"3–5 hours per day","count":22,"pct":40.0},{"label":"1–3 hours per day","count":19,"pct":34.5},{"label":"More than 5 hours per day","count":11,"pct":20.0},{"label":"Less than 1 hour per day","count":3,"pct":5.5}]},{"q":4,"question":"Platforms Used Most Frequently","multiSelect":true,"breakdown":[{"label":"WhatsApp","count":51,"pct":92.7},{"label":"Instagram","count":49,"pct":89.1},{"label":"YouTube","count":44,"pct":80.0},{"label":"Snapchat","count":28,"pct":50.9},{"label":"X (Twitter)","count":21,"pct":38.2},{"label":"LinkedIn","count":19,"pct":34.5},{"label":"Facebook","count":14,"pct":25.5},{"label":"Telegram","count":12,"pct":21.8}]},{"q":5,"question":"Primary Purpose of Use","multiSelect":true,"breakdown":[{"label":"Communication with friends and family","count":46,"pct":83.6},{"label":"Entertainment","count":43,"pct":78.2},{"label":"News and information","count":33,"pct":60.0},{"label":"Education and study material","count":27,"pct":49.1},{"label":"Content creation","count":15,"pct":27.3},{"label":"Professional networking","count":14,"pct":25.5},{"label":"Online shopping","count":12,"pct":21.8}]},{"q":6,"question":"Account Privacy Status","multiSelect":false,"breakdown":[{"label":"Yes","count":36,"pct":65.5},{"label":"No","count":15,"pct":27.3},{"label":"Not sure","count":4,"pct":7.3}]},{"q":7,"question":"Password Practices","multiSelect":false,"breakdown":[{"label":"Yes","count":30,"pct":54.5},{"label":"No","count":15,"pct":27.3},{"label":"Not sure","count":10,"pct":18.2}]},{"q":8,"question":"Two-Factor Authentication","multiSelect":false,"breakdown":[{"label":"No","count":24,"pct":43.6},{"label":"Yes","count":23,"pct":41.8},{"label":"I don't know what 2FA is","count":8,"pct":14.5}]},{"q":9,"question":"Suspicious Messages / Requests","multiSelect":false,"breakdown":[{"label":"Yes","count":45,"pct":81.8},{"label":"No","count":8,"pct":14.5},{"label":"Not sure","count":2,"pct":3.6}]},{"q":10,"question":"Response to a Suspicious Link","multiSelect":false,"breakdown":[{"label":"Ignore or delete it","count":24,"pct":43.6},{"label":"Report and delete it","count":14,"pct":25.5},{"label":"Ask someone before taking any action","count":9,"pct":16.4},{"label":"I'm not sure","count":6,"pct":10.9},{"label":"Open it to see what it contains","count":2,"pct":3.6}]},{"q":11,"question":"Reflection Before Posting","multiSelect":false,"breakdown":[{"label":"Sometimes","count":20,"pct":36.4},{"label":"Often","count":16,"pct":29.1},{"label":"Always","count":11,"pct":20.0},{"label":"Rarely","count":6,"pct":10.9},{"label":"Never","count":2,"pct":3.6}]},{"q":12,"question":"Digital-Footprint Awareness","multiSelect":false,"breakdown":[{"label":"Yes, I understand it","count":33,"pct":60.0},{"label":"I have heard of it but don't understand it clearly","count":15,"pct":27.3},{"label":"No, I don't know what it means","count":7,"pct":12.7}]},{"q":13,"question":"Impact of Posts on Future Opportunities","multiSelect":false,"breakdown":[{"label":"Yes","count":44,"pct":80.0},{"label":"Not sure","count":8,"pct":14.5},{"label":"No","count":3,"pct":5.5}]},{"q":14,"question":"Public Sharing of Personal Information","multiSelect":false,"breakdown":[{"label":"Rarely","count":24,"pct":43.6},{"label":"Never","count":17,"pct":30.9},{"label":"Sometimes","count":11,"pct":20.0},{"label":"Often","count":3,"pct":5.5}]},{"q":15,"question":"Privacy-Settings Review","multiSelect":false,"breakdown":[{"label":"Sometimes","count":18,"pct":32.7},{"label":"Rarely","count":14,"pct":25.5},{"label":"Yes, regularly","count":13,"pct":23.6},{"label":"Never","count":5,"pct":9.1},{"label":"I don't know how to do it","count":5,"pct":9.1}]},{"q":16,"question":"Knowledge of Blocking / Reporting","multiSelect":false,"breakdown":[{"label":"Yes","count":42,"pct":76.4},{"label":"Not sure","count":7,"pct":12.7},{"label":"No","count":6,"pct":10.9}]},{"q":17,"question":"Perceived Major Risks","multiSelect":true,"breakdown":[{"label":"Fake accounts and impersonation","count":40,"pct":72.7},{"label":"Online scams and financial fraud","count":38,"pct":69.1},{"label":"Cyberbullying and harassment","count":35,"pct":63.6},{"label":"Privacy loss and data misuse","count":31,"pct":56.4},{"label":"Misinformation and fake news","count":29,"pct":52.7},{"label":"Hacking and account takeover","count":26,"pct":47.3},{"label":"Social-media addiction","count":24,"pct":43.6}]},{"q":18,"question":"Confidence in Identifying Scams","multiSelect":false,"breakdown":[{"label":"3 – Moderately confident","count":19,"pct":34.5},{"label":"4","count":17,"pct":30.9},{"label":"5 – Very confident","count":9,"pct":16.4},{"label":"2","count":7,"pct":12.7},{"label":"1 – Not confident","count":3,"pct":5.5}]},{"q":19,"question":"Behaviour Change After Learning of a Risk","multiSelect":false,"breakdown":[{"label":"Yes","count":28,"pct":50.9},{"label":"Partially","count":17,"pct":30.9},{"label":"No","count":10,"pct":18.2}]},{"q":20,"question":"Suggestions for Improving Awareness","multiSelect":false,"breakdown":[{"label":"Workshops and awareness sessions in college","count":18,"pct":32.7},{"label":"Practical demonstrations of privacy settings and 2FA","count":13,"pct":23.6},{"label":"Short videos and posters on campus","count":10,"pct":18.2},{"label":"Examples of real scam cases","count":9,"pct":16.4},{"label":"Parent and teacher involvement","count":5,"pct":9.1}]},{"q":21,"question":"Interest in Learning More","multiSelect":false,"breakdown":[{"label":"Yes","count":41,"pct":74.5},{"label":"Maybe","count":11,"pct":20.0},{"label":"No","count":3,"pct":5.5}]}];
+  const RAW_HEADERS = ["ID","Q1. Age Group","Q2. Occupation / Status","Q3. Daily Social-Media Usage","Q4. Platforms Used Most Frequently","Q5. Primary Purpose of Use","Q6. Account Privacy Status","Q7. Password Practices","Q8. Two-Factor Authentication","Q9. Suspicious Messages / Requests","Q10. Response to a Suspicious Link","Q11. Reflection Before Posting","Q12. Digital-Footprint Awareness","Q13. Impact of Posts on Future Opportunities","Q14. Public Sharing of Personal Information","Q15. Privacy-Settings Review","Q16. Knowledge of Blocking / Reporting","Q17. Perceived Major Risks","Q18. Confidence in Identifying Scams","Q19. Behaviour Change After Learning of a Risk","Q20. Suggestions for Improving Awareness","Q21. Interest in Learning More"];
+  const RAW_ROWS = [["001","18–24","College/university student","1–3 hours per day","WhatsApp; Instagram; YouTube; LinkedIn","Communication with friends and family; Education and study material","No","Yes","Yes","Yes","I'm not sure","Sometimes","No, I don't know what it means","No","Rarely","Never","Yes","Fake accounts and impersonation; Cyberbullying and harassment; Misinformation and fake news; Hacking and account takeover; Social-media addiction","4","No","Workshops and awareness sessions in college","Maybe"],["002","18–24","Working professional","1–3 hours per day","WhatsApp; Instagram; YouTube; X (Twitter)","Communication with friends and family; News and information","Yes","Yes","No","Yes","Ask someone before taking any action","Sometimes","I have heard of it but don't understand it clearly","Yes","Rarely","Sometimes","Yes","Fake accounts and impersonation; Online scams and financial fraud; Privacy loss and data misuse; Hacking and account takeover","2","Yes","Practical demonstrations of privacy settings and 2FA","No"],["003","18–24","College/university student","Less than 1 hour per day","WhatsApp; YouTube; Snapchat; LinkedIn; Facebook","Communication with friends and family; News and information; Online shopping","Yes","No","Yes","Yes","Ask someone before taking any action","Often","I have heard of it but don't understand it clearly","Not sure","Never","Rarely","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Hacking and account takeover","3 – Moderately confident","Partially","Practical demonstrations of privacy settings and 2FA","Maybe"],["004","18–24","College/university student","3–5 hours per day","WhatsApp; Instagram; YouTube; Snapchat; Telegram","Communication with friends and family; Entertainment; News and information; Education and study material","Yes","No","Yes","No","Ignore or delete it","Often","Yes, I understand it","Not sure","Sometimes","Yes, regularly","Not sure","Fake accounts and impersonation; Privacy loss and data misuse; Hacking and account takeover","5 – Very confident","No","Workshops and awareness sessions in college","Maybe"],["005","25–34","College/university student","3–5 hours per day","WhatsApp; Instagram; YouTube; Snapchat; LinkedIn; Telegram","Communication with friends and family; Education and study material","Yes","Yes","Yes","Yes","Ask someone before taking any action","Sometimes","Yes, I understand it","Yes","Never","I don't know how to do it","Yes","Cyberbullying and harassment; Privacy loss and data misuse; Misinformation and fake news; Hacking and account takeover","4","Yes","Workshops and awareness sessions in college","Maybe"],["006","18–24","College/university student","More than 5 hours per day","WhatsApp; Instagram; YouTube; Snapchat; LinkedIn","Communication with friends and family; Entertainment; Content creation; Professional networking; Online shopping","Yes","Not sure","Yes","Yes","Ask someone before taking any action","Rarely","Yes, I understand it","Yes","Rarely","Sometimes","Not sure","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Misinformation and fake news; Hacking and account takeover; Social-media addiction","5 – Very confident","Yes","Workshops and awareness sessions in college","Yes"],["007","18–24","College/university student","1–3 hours per day","WhatsApp; Instagram; YouTube; Snapchat; X (Twitter); Facebook","Communication with friends and family; Entertainment; News and information; Professional networking","Yes","Yes","No","Yes","I'm not sure","Always","I have heard of it but don't understand it clearly","Yes","Rarely","I don't know how to do it","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Hacking and account takeover; Social-media addiction","5 – Very confident","Partially","Workshops and awareness sessions in college","Yes"],["008","13–17","College/university student","More than 5 hours per day","WhatsApp; Instagram; YouTube; X (Twitter); LinkedIn","Communication with friends and family; Entertainment; News and information; Education and study material","No","No","Yes","Yes","Report and delete it","Always","I have heard of it but don't understand it clearly","Yes","Often","Yes, regularly","No","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Misinformation and fake news","2","No","Workshops and awareness sessions in college","No"],["009","25–34","Working professional","1–3 hours per day","WhatsApp; Instagram; YouTube; Snapchat; X (Twitter); Facebook","Communication with friends and family; Entertainment; Content creation","Yes","No","I don't know what 2FA is","Yes","Ignore or delete it","Rarely","No, I don't know what it means","Not sure","Sometimes","Yes, regularly","Yes","Fake accounts and impersonation; Misinformation and fake news; Social-media addiction","5 – Very confident","Yes","Workshops and awareness sessions in college","Maybe"],["010","18–24","College/university student","3–5 hours per day","WhatsApp; Instagram; YouTube; Snapchat; X (Twitter)","Communication with friends and family; Entertainment; News and information; Professional networking","No","Yes","No","Yes","Ignore or delete it","Sometimes","Yes, I understand it","Yes","Never","Yes, regularly","Yes","Fake accounts and impersonation; Online scams and financial fraud; Privacy loss and data misuse; Hacking and account takeover","1 – Not confident","No","Workshops and awareness sessions in college","Yes"],["011","18–24","College/university student","Less than 1 hour per day","WhatsApp; Instagram; YouTube; Snapchat; X (Twitter)","Communication with friends and family","No","Yes","I don't know what 2FA is","Yes","Ignore or delete it","Rarely","Yes, I understand it","Yes","Rarely","Sometimes","Yes","Online scams and financial fraud; Privacy loss and data misuse; Misinformation and fake news; Hacking and account takeover; Social-media addiction","4","Partially","Parent and teacher involvement","Yes"],["012","13–17","College/university student","1–3 hours per day","WhatsApp; Instagram; YouTube; Facebook","Communication with friends and family; Entertainment; News and information; Education and study material","Yes","No","No","Yes","Ask someone before taking any action","Always","I have heard of it but don't understand it clearly","Yes","Rarely","Sometimes","Yes","Fake accounts and impersonation; Misinformation and fake news; Social-media addiction","3 – Moderately confident","Partially","Short videos and posters on campus","Yes"],["013","18–24","Other","3–5 hours per day","WhatsApp; Instagram; YouTube; X (Twitter)","Communication with friends and family; Entertainment; News and information; Education and study material","No","Not sure","Yes","Yes","I'm not sure","Often","I have heard of it but don't understand it clearly","Yes","Never","Rarely","Yes","Online scams and financial fraud; Privacy loss and data misuse; Misinformation and fake news; Hacking and account takeover; Social-media addiction","2","Partially","Short videos and posters on campus","Yes"],["014","13–17","School student","1–3 hours per day","WhatsApp; Snapchat; LinkedIn; Facebook","Communication with friends and family; Entertainment; Education and study material; Content creation","Yes","Yes","No","Yes","Ignore or delete it","Sometimes","Yes, I understand it","Not sure","Rarely","Never","Not sure","Fake accounts and impersonation; Online scams and financial fraud; Privacy loss and data misuse; Misinformation and fake news; Hacking and account takeover; Social-media addiction","5 – Very confident","Yes","Examples of real scam cases","Yes"],["015","18–24","College/university student","1–3 hours per day","WhatsApp; Instagram; YouTube; Snapchat; Telegram","News and information","No","Yes","Yes","No","Ignore or delete it","Always","Yes, I understand it","Not sure","Rarely","Rarely","No","Online scams and financial fraud; Misinformation and fake news; Hacking and account takeover; Social-media addiction","3 – Moderately confident","No","Short videos and posters on campus","Yes"],["016","18–24","College/university student","Less than 1 hour per day","WhatsApp; Instagram; YouTube; LinkedIn","Education and study material; Content creation; Professional networking","Yes","Yes","No","Yes","Report and delete it","Always","Yes, I understand it","Yes","Rarely","Yes, regularly","No","Online scams and financial fraud; Cyberbullying and harassment","5 – Very confident","No","Examples of real scam cases","Yes"],["017","25–34","Other","1–3 hours per day","WhatsApp; Instagram; Snapchat","Entertainment","Yes","Yes","No","Yes","Ignore or delete it","Sometimes","Yes, I understand it","Yes","Never","Sometimes","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Hacking and account takeover","3 – Moderately confident","Partially","Examples of real scam cases","Yes"],["018","18–24","College/university student","1–3 hours per day","WhatsApp; Instagram; YouTube; Snapchat; LinkedIn; Facebook","Communication with friends and family; Entertainment; News and information; Education and study material; Professional networking","No","No","Yes","Yes","Report and delete it","Always","Yes, I understand it","Not sure","Never","Yes, regularly","Not sure","Fake accounts and impersonation; Online scams and financial fraud; Misinformation and fake news; Hacking and account takeover","2","Yes","Practical demonstrations of privacy settings and 2FA","Yes"],["019","18–24","College/university student","More than 5 hours per day","WhatsApp; Instagram; YouTube","Communication with friends and family; Entertainment; News and information; Online shopping","Not sure","Yes","I don't know what 2FA is","Yes","Ask someone before taking any action","Often","Yes, I understand it","Yes","Rarely","Rarely","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Misinformation and fake news; Social-media addiction","4","Yes","Examples of real scam cases","Yes"],["020","18–24","College/university student","1–3 hours per day","WhatsApp; Instagram; YouTube; X (Twitter); LinkedIn","Communication with friends and family; Entertainment; News and information; Education and study material; Professional networking","No","No","No","Yes","Report and delete it","Often","Yes, I understand it","Yes","Rarely","Never","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Hacking and account takeover; Social-media addiction","3 – Moderately confident","Yes","Workshops and awareness sessions in college","Yes"],["021","18–24","College/university student","3–5 hours per day","WhatsApp; Instagram; YouTube; Snapchat; Telegram","Communication with friends and family; Entertainment; Professional networking","Yes","Yes","No","Yes","Report and delete it","Often","No, I don't know what it means","Yes","Rarely","Rarely","No","Fake accounts and impersonation; Cyberbullying and harassment; Privacy loss and data misuse; Misinformation and fake news","3 – Moderately confident","Partially","Practical demonstrations of privacy settings and 2FA","Yes"],["022","18–24","College/university student","1–3 hours per day","WhatsApp; Instagram; Snapchat","Communication with friends and family; Entertainment; News and information","Yes","Yes","Yes","Yes","Ignore or delete it","Rarely","Yes, I understand it","Yes","Sometimes","Yes, regularly","Yes","Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Hacking and account takeover","3 – Moderately confident","Yes","Practical demonstrations of privacy settings and 2FA","Yes"],["023","35–44","College/university student","3–5 hours per day","WhatsApp; Instagram","Communication with friends and family; Entertainment; News and information","Not sure","No","No","Yes","Ignore or delete it","Sometimes","Yes, I understand it","Yes","Rarely","Rarely","Yes","Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Hacking and account takeover; Social-media addiction","4","Partially","Short videos and posters on campus","Yes"],["024","18–24","College/university student","1–3 hours per day","WhatsApp; Instagram; YouTube; Facebook","Entertainment; News and information; Content creation; Professional networking","Yes","Not sure","No","Not sure","Ignore or delete it","Rarely","Yes, I understand it","Yes","Never","Rarely","Yes","Fake accounts and impersonation; Online scams and financial fraud; Misinformation and fake news","3 – Moderately confident","Yes","Short videos and posters on campus","Yes"],["025","18–24","College/university student","3–5 hours per day","WhatsApp; Instagram; LinkedIn","Communication with friends and family; Entertainment; News and information; Online shopping","No","No","No","No","Ignore or delete it","Sometimes","Yes, I understand it","Yes","Never","I don't know how to do it","Yes","Fake accounts and impersonation; Online scams and financial fraud; Misinformation and fake news; Social-media addiction","4","Yes","Examples of real scam cases","Yes"],["026","13–17","College/university student","1–3 hours per day","WhatsApp; Instagram; YouTube; X (Twitter)","Communication with friends and family; Entertainment; Education and study material; Professional networking","Yes","Yes","I don't know what 2FA is","Yes","I'm not sure","Sometimes","I have heard of it but don't understand it clearly","Yes","Sometimes","Yes, regularly","Not sure","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Misinformation and fake news","1 – Not confident","Yes","Short videos and posters on campus","Yes"],["027","18–24","College/university student","3–5 hours per day","WhatsApp; Instagram; YouTube; Snapchat; X (Twitter); Facebook; Telegram","Communication with friends and family; Entertainment; News and information; Education and study material; Content creation","No","Not sure","I don't know what 2FA is","Yes","Ask someone before taking any action","Always","No, I don't know what it means","Yes","Sometimes","Sometimes","No","Online scams and financial fraud; Misinformation and fake news; Social-media addiction","3 – Moderately confident","Yes","Practical demonstrations of privacy settings and 2FA","Yes"],["028","35–44","College/university student","More than 5 hours per day","WhatsApp; Instagram; YouTube; LinkedIn; Facebook","Communication with friends and family; Entertainment","Yes","Yes","I don't know what 2FA is","Yes","Open it to see what it contains","Sometimes","Yes, I understand it","Yes","Sometimes","I don't know how to do it","Yes","Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Hacking and account takeover","3 – Moderately confident","Partially","Parent and teacher involvement","Yes"],["029","18–24","College/university student","1–3 hours per day","WhatsApp; Instagram; YouTube; Snapchat; LinkedIn; Facebook","Communication with friends and family; Entertainment; News and information; Education and study material; Content creation","Yes","Yes","No","Yes","Report and delete it","Sometimes","Yes, I understand it","Yes","Rarely","Rarely","Yes","Fake accounts and impersonation; Privacy loss and data misuse; Hacking and account takeover; Social-media addiction","5 – Very confident","Partially","Workshops and awareness sessions in college","Yes"],["030","18–24","College/university student","3–5 hours per day","WhatsApp; Instagram; YouTube; Snapchat","Entertainment; News and information; Professional networking","No","Yes","Yes","Yes","Ask someone before taking any action","Sometimes","Yes, I understand it","Yes","Rarely","Never","Yes","Fake accounts and impersonation; Cyberbullying and harassment","3 – Moderately confident","Partially","Short videos and posters on campus","Yes"],["031","18–24","College/university student","3–5 hours per day","WhatsApp; YouTube; Snapchat","Communication with friends and family; Entertainment; News and information; Content creation","Yes","Not sure","Yes","Yes","Ignore or delete it","Often","Yes, I understand it","Not sure","Rarely","Sometimes","Not sure","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Misinformation and fake news","4","Yes","Practical demonstrations of privacy settings and 2FA","Yes"],["032","18–24","College/university student","More than 5 hours per day","WhatsApp; Instagram; YouTube; X (Twitter)","Communication with friends and family; Entertainment","Not sure","Not sure","No","Yes","Ask someone before taking any action","Often","I have heard of it but don't understand it clearly","Not sure","Often","Rarely","No","Fake accounts and impersonation; Cyberbullying and harassment; Privacy loss and data misuse","3 – Moderately confident","Yes","Practical demonstrations of privacy settings and 2FA","Yes"],["033","13–17","College/university student","3–5 hours per day","Instagram; Snapchat; X (Twitter); Telegram","Communication with friends and family; Entertainment; News and information; Education and study material; Professional networking","No","Yes","Yes","Yes","Report and delete it","Often","I have heard of it but don't understand it clearly","Yes","Rarely","Sometimes","Yes","Fake accounts and impersonation; Cyberbullying and harassment","2","Yes","Short videos and posters on campus","Maybe"],["034","18–24","Working professional","1–3 hours per day","WhatsApp; Instagram; YouTube; Snapchat; X (Twitter)","Communication with friends and family; Entertainment; Online shopping","Yes","No","I don't know what 2FA is","No","Report and delete it","Always","Yes, I understand it","Yes","Sometimes","Sometimes","Yes","Cyberbullying and harassment; Privacy loss and data misuse; Hacking and account takeover","3 – Moderately confident","Partially","Examples of real scam cases","Maybe"],["035","18–24","College/university student","3–5 hours per day","WhatsApp; Instagram; YouTube; X (Twitter)","Communication with friends and family; Entertainment; News and information; Content creation","Not sure","No","Yes","Yes","Ignore or delete it","Always","Yes, I understand it","Yes","Never","Rarely","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Hacking and account takeover; Social-media addiction","3 – Moderately confident","Partially","Practical demonstrations of privacy settings and 2FA","Yes"],["036","25–34","College/university student","More than 5 hours per day","WhatsApp; Instagram; YouTube; LinkedIn; Telegram","Communication with friends and family; Entertainment; Education and study material; Professional networking; Online shopping","Yes","No","Yes","Yes","Ignore or delete it","Often","I have heard of it but don't understand it clearly","Yes","Rarely","Yes, regularly","Yes","Fake accounts and impersonation; Cyberbullying and harassment; Social-media addiction","1 – Not confident","Partially","Examples of real scam cases","Maybe"],["037","13–17","College/university student","More than 5 hours per day","WhatsApp; YouTube; Facebook; Telegram","Communication with friends and family; Entertainment; News and information; Education and study material; Content creation; Online shopping","Yes","Not sure","No","Not sure","Ignore or delete it","Always","Yes, I understand it","No","Sometimes","Sometimes","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Misinformation and fake news","3 – Moderately confident","Yes","Examples of real scam cases","Yes"],["038","18–24","School student","3–5 hours per day","WhatsApp; Instagram; YouTube; Snapchat; LinkedIn","Communication with friends and family; Entertainment; Education and study material","Yes","No","Yes","No","Ignore or delete it","Often","Yes, I understand it","Yes","Never","Yes, regularly","Yes","Misinformation and fake news; Social-media addiction","2","No","Parent and teacher involvement","Yes"],["039","25–34","College/university student","3–5 hours per day","WhatsApp; Instagram; YouTube; X (Twitter); Facebook; Telegram","Communication with friends and family; Entertainment; News and information","Yes","Yes","Yes","Yes","Ignore or delete it","Never","I have heard of it but don't understand it clearly","Yes","Never","Sometimes","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Social-media addiction","4","Yes","Workshops and awareness sessions in college","Yes"],["040","18–24","School student","3–5 hours per day","WhatsApp; Instagram; X (Twitter); Facebook","Entertainment; News and information; Education and study material","Yes","Not sure","Yes","No","Report and delete it","Often","I have heard of it but don't understand it clearly","Yes","Rarely","Sometimes","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment","4","Yes","Practical demonstrations of privacy settings and 2FA","Yes"],["041","18–24","School student","1–3 hours per day","WhatsApp; Instagram","Communication with friends and family; Entertainment; Education and study material","Yes","Yes","No","Yes","Report and delete it","Often","Yes, I understand it","Yes","Rarely","Rarely","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment","4","Partially","Workshops and awareness sessions in college","Maybe"],["042","18–24","College/university student","3–5 hours per day","WhatsApp; Instagram; YouTube; X (Twitter); Telegram","Communication with friends and family; Education and study material; Content creation; Online shopping","Yes","No","No","Yes","Report and delete it","Sometimes","Yes, I understand it","Yes","Rarely","I don't know how to do it","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Misinformation and fake news; Hacking and account takeover; Social-media addiction","4","Yes","Parent and teacher involvement","Yes"],["043","18–24","School student","More than 5 hours per day","WhatsApp; Instagram; YouTube; Snapchat; Telegram","Online shopping","No","Yes","Yes","Yes","Ignore or delete it","Sometimes","Yes, I understand it","Yes","Sometimes","Yes, regularly","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Misinformation and fake news","5 – Very confident","Yes","Practical demonstrations of privacy settings and 2FA","Maybe"],["044","18–24","College/university student","3–5 hours per day","WhatsApp; Instagram; YouTube; Snapchat; X (Twitter); Telegram","Communication with friends and family; Entertainment; Content creation","Yes","Yes","No","No","Ignore or delete it","Sometimes","Yes, I understand it","Yes","Never","Rarely","Yes","Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Misinformation and fake news; Social-media addiction","4","Yes","Practical demonstrations of privacy settings and 2FA","Yes"],["045","18–24","College/university student","3–5 hours per day","WhatsApp; Instagram","Communication with friends and family; News and information; Education and study material; Content creation; Online shopping","Yes","Yes","No","Yes","I'm not sure","Sometimes","No, I don't know what it means","No","Never","Sometimes","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Misinformation and fake news","4","Yes","Short videos and posters on campus","Yes"],["046","18–24","College/university student","3–5 hours per day","WhatsApp; Instagram; YouTube","Entertainment; News and information; Education and study material; Content creation","Yes","Not sure","Yes","Yes","Report and delete it","Often","No, I don't know what it means","Yes","Rarely","Rarely","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Social-media addiction","4","Partially","Short videos and posters on campus","Maybe"],["047","18–24","School student","3–5 hours per day","Instagram; YouTube; LinkedIn","Communication with friends and family; News and information; Education and study material; Professional networking","Yes","Yes","No","Yes","Ignore or delete it","Sometimes","Yes, I understand it","Yes","Rarely","Rarely","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Misinformation and fake news","4","Partially","Examples of real scam cases","Yes"],["048","18–24","College/university student","3–5 hours per day","WhatsApp; Instagram; YouTube; Snapchat; LinkedIn","Communication with friends and family; Entertainment; News and information; Education and study material","Yes","Yes","Yes","Yes","Open it to see what it contains","Often","No, I don't know what it means","Yes","Sometimes","Never","Not sure","Fake accounts and impersonation; Privacy loss and data misuse; Misinformation and fake news; Hacking and account takeover","4","Yes","Workshops and awareness sessions in college","Yes"],["049","18–24","College/university student","More than 5 hours per day","WhatsApp; Snapchat","Entertainment","No","Yes","No","Yes","Ignore or delete it","Often","Yes, I understand it","Yes","Often","Sometimes","Yes","Online scams and financial fraud; Cyberbullying and harassment; Misinformation and fake news; Hacking and account takeover","3 – Moderately confident","No","Workshops and awareness sessions in college","Yes"],["050","18–24","Working professional","1–3 hours per day","Instagram; YouTube; Snapchat; LinkedIn","Communication with friends and family; News and information; Online shopping","Yes","No","I don't know what 2FA is","Yes","Report and delete it","Rarely","I have heard of it but don't understand it clearly","Yes","Never","Sometimes","Yes","Fake accounts and impersonation; Online scams and financial fraud; Privacy loss and data misuse; Hacking and account takeover; Social-media addiction","2","Yes","Workshops and awareness sessions in college","Yes"],["051","18–24","College/university student","More than 5 hours per day","WhatsApp; Instagram; YouTube; Snapchat","Communication with friends and family; Entertainment","Yes","Not sure","Yes","Yes","I'm not sure","Never","Yes, I understand it","Yes","Never","Sometimes","Yes","Fake accounts and impersonation; Online scams and financial fraud; Cyberbullying and harassment; Privacy loss and data misuse; Misinformation and fake news","3 – Moderately confident","No","Parent and teacher involvement","No"],["052","18–24","College/university student","3–5 hours per day","YouTube; Snapchat; X (Twitter); LinkedIn","Communication with friends and family; Entertainment; Professional networking","Yes","Yes","No","Yes","Report and delete it","Sometimes","Yes, I understand it","Yes","Sometimes","Sometimes","Yes","Online scams and financial fraud; Privacy loss and data misuse; Social-media addiction","4","Yes","Workshops and awareness sessions in college","Yes"],["053","18–24","Working professional","1–3 hours per day","WhatsApp; Instagram; YouTube; X (Twitter); LinkedIn","Communication with friends and family; Entertainment; News and information; Education and study material; Online shopping","No","Yes","Yes","Yes","Ignore or delete it","Always","I have heard of it but don't understand it clearly","Yes","Rarely","Yes, regularly","Yes","Fake accounts and impersonation; Privacy loss and data misuse; Misinformation and fake news","3 – Moderately confident","Yes","Workshops and awareness sessions in college","Yes"],["054","18–24","College/university student","1–3 hours per day","WhatsApp; Instagram; YouTube; X (Twitter)","Communication with friends and family; Entertainment; News and information; Education and study material","Yes","Yes","No","Yes","Ignore or delete it","Sometimes","I have heard of it but don't understand it clearly","Yes","Never","Sometimes","Yes","Privacy loss and data misuse","3 – Moderately confident","Yes","Practical demonstrations of privacy settings and 2FA","Yes"],["055","25–34","College/university student","More than 5 hours per day","WhatsApp; Instagram; Facebook","Communication with friends and family; Entertainment; News and information; Education and study material; Content creation","Yes","Yes","No","No","Ignore or delete it","Sometimes","Yes, I understand it","Yes","Never","Yes, regularly","Yes","Fake accounts and impersonation; Cyberbullying and harassment; Hacking and account takeover","5 – Very confident","No","Workshops and awareness sessions in college","Yes"]];
+
+  const SURVEY_BY_Q = {};
+  SURVEY_DATA.forEach(function(d){ SURVEY_BY_Q[d.q] = d; });
+
+  const COLORS = ['#1D6B57','#BD7F2C','#9E3B32','#3E8A73','#8A5D1F','#6B4A96','#2E6E8E','#7A7A3A','#B5544A'];
+
+  /* ---------- Nav: mobile toggle ---------- */
+  const navToggle = document.getElementById('navToggle');
+  const navList = document.getElementById('navList');
+  if(navToggle && navList){
+    navToggle.addEventListener('click', function(){
+      const open = navList.classList.toggle('is-open');
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    navList.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ navList.classList.remove('is-open'); navToggle.setAttribute('aria-expanded','false'); });
+    });
+  }
+
+  /* ---------- Nav: scroll-spy ---------- */
+  const sections = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  const navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-list a'));
+  function setActive(id){
+    navLinks.forEach(function(a){
+      a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
+    });
+  }
+  if('IntersectionObserver' in window && sections.length){
+    const spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ setActive(entry.target.id); }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    sections.forEach(function(s){ spy.observe(s); });
+  }
+
+  /* ---------- Chart rendering ---------- */
+  function fmtPct(p){ return (Number.isInteger(p) ? p : p.toFixed(1)) + '%'; }
+
+  function renderBar(mount, data){
+    const wrap = document.createElement('div');
+    wrap.className = 'bars';
+    const max = Math.max.apply(null, data.breakdown.map(function(b){ return b.count; }));
+    data.breakdown.forEach(function(b){
+      const row = document.createElement('div');
+      row.className = 'bar-row';
+      const label = document.createElement('div');
+      label.className = 'bar-label';
+      label.textContent = b.label;
+      const track = document.createElement('div');
+      track.className = 'bar-track';
+      track.tabIndex = 0;
+      track.setAttribute('aria-label', b.label + ': ' + b.count + ' of ' + RAW_ROWS.length + ' responses, ' + fmtPct(b.pct));
+      const fill = document.createElement('div');
+      fill.className = 'bar-fill' + (data.multiSelect ? ' is-multi' : '');
+      fill.style.width = '0%';
+      fill.dataset.target = ((b.count / max) * 100).toFixed(1);
+      track.appendChild(fill);
+      const value = document.createElement('div');
+      value.className = 'bar-value';
+      value.textContent = b.count + ' · ' + fmtPct(b.pct);
+      row.appendChild(label); row.appendChild(track); row.appendChild(value);
+      wrap.appendChild(row);
+    });
+    mount.appendChild(wrap);
+  }
+
+  function renderDonut(mount, data){
+    const row = document.createElement('div');
+    row.className = 'donut-row';
+
+    const size = 150, stroke = 16, r = (size - stroke) / 2, c = 2 * Math.PI * r;
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + size + ' ' + size);
+    svg.setAttribute('class', 'donut-svg');
+
+    const bg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    bg.setAttribute('class', 'bg');
+    bg.setAttribute('cx', size/2); bg.setAttribute('cy', size/2); bg.setAttribute('r', r);
+    svg.appendChild(bg);
+
+    let offset = 0;
+    const segs = [];
+    data.breakdown.forEach(function(b, i){
+      const seg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      seg.setAttribute('class', 'seg');
+      seg.setAttribute('cx', size/2); seg.setAttribute('cy', size/2); seg.setAttribute('r', r);
+      seg.setAttribute('stroke', COLORS[i % COLORS.length]);
+      seg.setAttribute('transform', 'rotate(-90 ' + (size/2) + ' ' + (size/2) + ')');
+      const len = (b.pct/100) * c;
+      seg.dataset.dasharray = len.toFixed(2) + ' ' + (c - len).toFixed(2);
+      seg.style.strokeDashoffset = (-offset).toFixed(2);
+      offset += len;
+      svg.appendChild(seg);
+      segs.push(seg);
+    });
+
+    const centerText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    centerText.setAttribute('x', '50%'); centerText.setAttribute('y', '50%');
+    centerText.setAttribute('text-anchor', 'middle'); centerText.setAttribute('dominant-baseline', 'central');
+    centerText.setAttribute('class', 'donut-center-num');
+    centerText.textContent = Math.round(data.breakdown[0].pct) + '%';
+    svg.appendChild(centerText);
+
+    const legend = document.createElement('div');
+    legend.className = 'donut-legend';
+    data.breakdown.forEach(function(b, i){
+      const lr = document.createElement('div'); lr.className = 'legend-row';
+      const sw = document.createElement('span'); sw.className = 'legend-swatch'; sw.style.background = COLORS[i % COLORS.length];
+      const lb = document.createElement('span'); lb.className = 'legend-label'; lb.textContent = b.label;
+      const val = document.createElement('span'); val.className = 'legend-value'; val.textContent = b.count + ' · ' + fmtPct(b.pct);
+      lr.appendChild(sw); lr.appendChild(lb); lr.appendChild(val);
+      legend.appendChild(lr);
+    });
+
+    row.appendChild(svg); row.appendChild(legend);
+    mount.appendChild(row);
+    return segs;
+  }
+
+  const mounts = Array.prototype.slice.call(document.querySelectorAll('.chart-mount'));
+  const pending = [];
+
+  mounts.forEach(function(mount){
+    const q = mount.getAttribute('data-q');
+    const type = mount.getAttribute('data-type');
+    const data = SURVEY_BY_Q[q];
+    if(!data) return;
+    if(type === 'donut'){
+      const segs = renderDonut(mount, data);
+      pending.push({ el: mount, run: function(){
+        segs.forEach(function(seg){ seg.style.strokeDasharray = seg.dataset.dasharray; });
+      }});
+    } else {
+      renderBar(mount, data);
+      pending.push({ el: mount, run: function(){
+        mount.querySelectorAll('.bar-fill').forEach(function(fill){ fill.style.width = fill.dataset.target + '%'; });
+      }});
+    }
+  });
+
+  if('IntersectionObserver' in window){
+    const chartObserver = new IntersectionObserver(function(entries, obs){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          const item = pending.filter(function(p){ return p.el === entry.target; })[0];
+          if(item){ item.run(); }
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    pending.forEach(function(p){ chartObserver.observe(p.el); });
+  } else {
+    pending.forEach(function(p){ p.run(); });
+  }
+
+  /* ---------- Dataset table ---------- */
+  const CORE_COLS = [0,1,2,3,6,8,12];
+  const theadRow = document.getElementById('datasetHead');
+  const tbody = document.getElementById('datasetBody');
+  const searchInput = document.getElementById('datasetSearch');
+  const countEl = document.getElementById('datasetCount');
+
+  function shortHeader(i){ return i === 0 ? 'Timestamp' : 'Q' + i; }
+
+  if(theadRow && tbody){
+    CORE_COLS.forEach(function(i){
+      const th = document.createElement('th');
+      th.textContent = shortHeader(i);
+      th.title = RAW_HEADERS[i];
+      theadRow.appendChild(th);
+    });
+    const thExpand = document.createElement('th');
+    theadRow.appendChild(thExpand);
+
+    function buildRows(rows){
+      tbody.innerHTML = '';
+      rows.forEach(function(r){
+        const tr = document.createElement('tr');
+        CORE_COLS.forEach(function(i){
+          const td = document.createElement('td');
+          td.textContent = r[i];
+          tr.appendChild(td);
+        });
+        const tdExpand = document.createElement('td');
+        tdExpand.textContent = 'View all \u2192';
+        tdExpand.className = 'expand-cell';
+        tr.appendChild(tdExpand);
+
+        const detailTr = document.createElement('tr');
+        detailTr.className = 'row-detail';
+        const detailTd = document.createElement('td');
+        detailTd.colSpan = CORE_COLS.length + 1;
+        const dl = document.createElement('dl');
+        RAW_HEADERS.forEach(function(h, i){
+          const dt = document.createElement('dt'); dt.textContent = i === 0 ? 'Timestamp' : h;
+          const dd = document.createElement('dd'); dd.textContent = r[i];
+          dl.appendChild(dt); dl.appendChild(dd);
+        });
+        detailTd.appendChild(dl);
+        detailTr.appendChild(detailTd);
+
+        tdExpand.addEventListener('click', function(){
+          const open = detailTr.classList.toggle('is-open');
+          tdExpand.textContent = open ? 'Hide \u2191' : 'View all \u2192';
+        });
+
+        tbody.appendChild(tr);
+        tbody.appendChild(detailTr);
+      });
+      if(countEl){ countEl.textContent = rows.length + (rows.length === 1 ? ' response' : ' responses'); }
+    }
+
+    buildRows(RAW_ROWS);
+
+    if(searchInput){
+      searchInput.addEventListener('input', function(){
+        const q = searchInput.value.trim().toLowerCase();
+        if(!q){ buildRows(RAW_ROWS); return; }
+        const filtered = RAW_ROWS.filter(function(r){
+          return r.some(function(cell){ return String(cell).toLowerCase().indexOf(q) !== -1; });
+        });
+        buildRows(filtered);
+      });
+    }
+  }
+
+})();
+</script>
+</body></html>
